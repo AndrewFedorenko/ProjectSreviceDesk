@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SERVICEDESK REQUEST</title>
+  <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{ topbar :: topbar}"></nav>
+
+<div>
+  <h2>REQUEST EDIT</h2>
+
+    <div style="border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: black;
+            width: max-content;
+            padding-bottom: 5px;
+            margin-bottom: 15px">
+
+        <button id="taketoworkbutton" onclick="taketowork()">  TAKE TO WORK </button>
+        <input type="button" value = "SAVE" onclick='saveDocumentRequest()' />
+        <input type="button" value = "FILES" onclick='openfiles()' />
+        <input type="button" value = "BACK TO REQUESTS" onclick='location.href="requests"' />
+    </div>
+
+    <div class="documentgroup" id = "errordiv" style="background-color: darkgoldenrod"></div>
+    <select id = "fieldslist" th:name="fieldslist">
+        <option th:each="d : ${fieldslist}" th:value="${d.field}"
+                th:text="${d.field}">
+        </option>
+    </select>
+    <div class="documentgroup">
+        <form id = "requestform" th:object="${requestobject}" action="/save_request" method="post">
+    <!--        >-->
+            <div class="documentgroup" id="datenumber">
+                <label>date:</label>
+                <input id = "date" type="text" th:field="*{date}" placeholder="date" />
+                <label>number:</label>
+                <input id = "id" type="number" th:field="*{id}" placeholder="number" />
+            </div>
+            <div class="documentgroup">
+                <th:block th:replace=
+                "~{ optionfieldconstructor :: optionfieldconstructor(${'customer:'},${'customerid'},${customerlist}, ${requestobject.customer})}">
+                </th:block>
+
+                <th:block th:replace=
+                "~{ optionfieldconstructor :: optionfieldconstructor(${'author:'},${'authorid'},${authorlist}, ${requestobject.author})}">
+                </th:block>
+
+                <th:block th:replace=
+                "~{ optionfieldconstructor :: optionfieldconstructor(${'user:'},${'userid'},${userlist}, ${requestobject.user})}">
+                </th:block>
+
+                <th:block th:replace=
+                "~{ optionfieldconstructor :: optionfieldconstructor(${'status:'},${'statusid'},${statuslist}, ${requestobject.status})}">
+                </th:block>
+
+                <th:block th:replace=
+                "~{ optionfieldconstructor :: optionfieldconstructor(${'project:'},${'projectid'},${projectlist}, ${requestobject.project})}">
+                </th:block>
+
+            </div>
+
+            <div id="contentdiv">
+                <label class="textlabel">content:</label>
+                <input id = "content" type="hidden" th:field="*{content}" placeholder="content" />
+                <textarea id = "contenttext"></textarea>
+
+                <label class="textlabel">answer:</label>
+                <input id="answer" type="hidden" th:field="*{answer}" placeholder="answer" />
+                <textarea id = "answertext"></textarea>
+            </div>
+    
+        </form>
+
+    </div>
+
+    <div class="documentgroup" id = "newmessagediv" style=" border-top-style: solid;
+                                                            border-top-width: 2px;
+                                                            padding-top: 3px;">
+        <label class="textlabel">new message:</label>
+<!--        <input id = "newmessage" type="text" placeholder="newmessage" />-->
+        <textarea id = "newmessage" style=" width: inherit;"></textarea>
+        <button id="filterbutton" onclick="sendmessage()">POST</button>
+    </div>
+
+    <div id="messagesdiv" >
+        <th:block th:replace="~{ requestmessage :: requestmessage}">
+        </th:block>
+    </div>
+    <style>
+        .documentgroup{
+            width: 70%;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .textlabel{
+            vertical-align: top;
+        }
+    </style>
+    <script>
+        function sendmessage() {
+            if($('#newmessage').val()!=='') {
+                if ($('#id').val() === '0') {
+                    var result = confirm("You must SAVE request before sending message and push again button ADD MESSAGE. Save request?")
+                    if (result) {
+                        saveDocumentRequest()
+                    }
+                } else {
+                    var result = confirm("Do you wish to post message?")
+                    if (result) {
+
+                        const XHR = new XMLHttpRequest();
+
+                        XHR.addEventListener( "load", function( result ) {
+                            $('#messagesdiv').html(result.target.response)
+                            $('#newmessage').val('')
+                             console.log(result)
+
+                        } );
+                        XHR.addEventListener( "error", function( event ) {
+                            console.log( event );
+                        } );
+
+                        XHR.open( "POST", "send_request_message" );
+                        var mparam = new FormData();
+                        mparam.append("id", $('#id').val())
+                        mparam.append("message", $('#newmessage').val())
+
+                        XHR.send( mparam );
+
+                    }
+                }
+            }
+        }
+
+        $(document).ready(function (){
+            $('#contenttext').val($('#content').val())
+            $('#answertext').val($('#answer').val())
+
+            var os=document.getElementById("fieldslist");
+            var i;
+            $('#requestform').find('input').each(function (th) {
+                console.log(this.id);
+                for (i=0; i<os.length; i++) {
+                    if(this.id==os[i].innerText){
+                        this.readOnly = true;
+                        break;
+                    }
+                }
+            })
+
+            $('#fieldslist').remove()
+
+            document.getElementById('answertext').readOnly = document.getElementById('answer').readOnly
+            document.getElementById('contenttext').readOnly = document.getElementById('content').readOnly
+
+        })
+
+        function saveDocumentRequest(){
+            $('#content').val($('#contenttext').val())
+            $('#answer').val($('#answertext').val())
+                    const XHR = new XMLHttpRequest();
+
+                    XHR.addEventListener( "load", function( result ) {
+                        // console.log( result.target.response );
+                        var res = JSON.parse(result.target.response)
+
+                        if (res.errorlist !== ''){
+                            $('#errordiv').text("Before saving you have to fill " + res.errorlist);
+                        } else {$('#errordiv').text("")}
+                        if (res.id !== ''){
+                            $('#id').val(res.id)
+                        }
+
+                    } );
+                    XHR.addEventListener( "error", function( event ) {
+                        console.log( event );
+                    } );
+
+                    XHR.open( "POST", "save_request" );
+                    XHR.send( new FormData(requestform) );
+
+        }
+
+        function openfiles(){
+
+            if ($('#id').val()==='0')
+            {
+                var result = confirm("You must SAVE request before attaching files and push again button FILES. Save request?")
+                if(result) {
+                    saveDocumentRequest()                        }
+            }
+            else {
+                location.href = "/files?id=" + $('#id').val()
+            }
+        }
+
+        function taketowork(){
+
+            const XHR = new XMLHttpRequest();
+
+            XHR.addEventListener( "load", function( result ) {
+                if(result.target.response!==""){
+
+                    var res = JSON.parse(result.target.response)
+                    if (res.id !== ''){
+                        $('#userid').val(res.id)
+
+
+                        if(document.getElementById('userid').length<=1){
+                            let newOption = new Option(res.name, res.id);
+                            $('#userid').append(newOption);
+
+                            newOption.selected = true;}
+                    }
+                }
+                else {
+                    alert("You have no permission to take in work requests!")
+                }
+            } );
+            XHR.addEventListener( "error", function( error ) {
+                console.log( error );
+            } );
+
+            XHR.open( "GET", "take_to_work" );
+            XHR.send( new FormData() );
+
+        }
+
+    </script>
+</div>
+</body>
+</html>

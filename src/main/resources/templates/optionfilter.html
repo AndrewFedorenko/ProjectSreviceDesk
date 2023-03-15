@@ -1,0 +1,7 @@
+<th:block th:fragment="optionfilter(paramslist)">
+<option th:each="d : ${paramslist}"
+        th:value="${d != null} ? ${d.id} : ${''}"
+        th:text="${d != null} ? ${d.name} : ${''}"
+        th:selected="${'0'}">
+</option>
+</th:block>

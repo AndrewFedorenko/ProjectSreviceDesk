@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>users and their projects</title>
+    <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{ topbar :: topbar}"></nav>
+
+<div th:fragment="usersprojects()">
+<form th:action="@{/add_project}" method="post" th:object="${newproject}">
+    <input type="hidden" th:field="*{id}" />
+    <label> NEW PROJECT
+    </label>
+    <input th:field="*{name}" />
+    <input type="submit" value="SAVE" />
+</form>
+
+<form id="submitusersprojectsform" method="post">
+    <label>project:</label>
+    <select th:name="projectid">
+        <option th:each="d : ${usersprojects_projects}" th:value="${d.id}"
+                th:text="${d.name}">
+        </option>
+    </select>
+    <label>user:</label>
+    <select th:name="userid">
+        <option th:each="d : ${usersprojects_users}" th:value="${d.id}"
+                th:text="${d.name+' '+d.email}">
+        </option>
+    </select>
+    <input type="submit" value = "ADD" formaction = "/add_user_project" />
+<!--    <button onclick="sendNewUserProject()">  ADD </button>-->
+    <input type="submit" value = "DEL" formaction = "/del_user_project" />
+</form>
+
+
+<table id="usersprojects_listtable" class="table">
+    <tr>
+        <th>PROJECT</th>
+        <th>USER</th>
+    </tr>
+    <th:block th:each="pr : ${usersprojects_projects}">
+        <tr  th:each="u : ${pr.users}">
+            <td th:text="${pr.name}"></td>
+            <td th:text="${u.name}"></td>
+        </tr>
+    </th:block>
+
+</table>
+</div>
+<!--<script>-->
+<!--    function sendNewUserProject() {-->
+<!--        var $json = {};-->
+<!--        $('#submitusersprojectsform').find('select').each(function() {-->
+<!--            // добавим новое свойство к объекту $data-->
+<!--            // имя свойства – значение атрибута name элемента-->
+<!--            // значение свойства – значение свойство value элемента-->
+<!--            $json[this.name] = $(this).val();-->
+<!--        })-->
+
+<!--            $.ajax({-->
+<!--                method: "GET",-->
+<!--                url: "add_user_project",-->
+<!--                dataType: "json",-->
+<!--                data: $json,-->
+<!--                success: function (result) {-->
+<!--                    console.log(result);-->
+<!--                },-->
+<!--                error: function (er) {-->
+<!--                    // console.log(er);-->
+<!--                    $('#requestsdiv').html(er.responseText);-->
+<!--                }-->
+<!--            })-->
+<!--            }-->
+<!--</script>-->
+
+</body>
+</html>

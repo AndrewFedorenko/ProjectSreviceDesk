@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>users</title>
+    <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{ topbar :: topbar}"></nav>
+
+<table id="usertable" class="table">
+    <tr>
+        <th>NAME</th>
+        <th>EMAIL</th>
+        <th>ROLE</th>
+    </tr>
+    <tr th:each="u : ${users}">
+            <td th:text="${u.name}"></td>
+            <td th:text="${u.email}"></td>
+            <td th:text="${u.role.name}"></td>
+    </tr>
+
+    <form >
+
+        <label>current user:</label>
+        <select th:name="userid">
+            <option th:each="d : ${users}" th:value="${d.id}"
+                    th:text="${d.name+' '+d.email}">
+            </option>
+        </select>
+        <select th:name="roleid">
+            <option th:each="d : ${roles}" th:value="${d.id}"
+                    th:text="${d.name}">
+            </option>
+        </select>
+<!--        <input type="button" value = "NEW" onclick='location.href = "/new_user"' />-->
+<!--        <input type="submit" value = "NEW" formmethod="get" formaction = "/new_user" />-->
+        <input type="submit" value = "EDIT" formmethod="get" formaction = "/edit_user" />
+        <input type="submit" value = "SET" formmethod="post" formaction = "/set_user_role" />
+    </form>
+    <form action="/edit_user" method="get">
+        <input type="submit" value="NEW">
+        <input type="hidden" name="userid" value="0">
+    </form>
+
+</table>
+</body>
+</html>

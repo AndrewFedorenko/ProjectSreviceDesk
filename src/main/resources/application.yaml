@@ -1,0 +1,20 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.format_sql: true
+      hibernate.highlight_sql: true
+
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/MyBase
+    username: postgres
+    password: 1
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      idle-timeout: 600000
+      connection-timeout: 30000
+      max-lifetime: 1800000

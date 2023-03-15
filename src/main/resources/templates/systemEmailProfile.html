@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
+    <title>Title</title>
+</head>
+<body>
+
+<nav th:replace="~{ topbar :: topbar}"></nav>
+
+<div id = "errordiv"></div>
+<div>
+    <h2>SYSTEM EMAIL SETTINGS</h2>
+    <div>
+        <input type="button" value = "SAVE" onclick='saveEmail()' />
+
+        <form id="emailform" th:action="@{/save_email}" method="post" th:object="${email}">
+            <input type="hidden" th:field="*{id}" />
+            <table>
+                <tr>
+                    <td>Email address: </td>
+                    <td><input th:field="*{address}" /></td>
+                </tr>
+                <tr>
+                    <td>SMTP host: </td>
+                    <td><input th:field="*{smtpHost}" /></td>
+                </tr>
+                <tr>
+                    <td>Port: </td>
+                    <td><input th:field="*{port}" /></td>
+                </tr>
+                <tr>
+                    <td>Login: </td>
+                    <td><input th:field="*{login}" /></td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input th:field="*{password}" /></td>
+                </tr>
+                <tr>
+                    <td>Active: </td>
+                    <td><input type="checkbox" th:field="*{isActive}" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    function saveEmail(){
+
+        const XHR = new XMLHttpRequest();
+
+        XHR.addEventListener( "load", function( result ) {
+
+            var res = JSON.parse(result.target.response)
+
+            if (res.errorlist !== ''){
+                $('#errordiv').text("Before saving you have to fill " + res.errorlist);
+            } else {$('#errordiv').text("")}
+            if (res.id !== ''){
+                $('#id').val(res.id)
+            }
+        } );
+        XHR.addEventListener( "error", function( event ) {
+            console.log( event );
+        } );
+
+        XHR.open( "POST", "save_email" );
+        XHR.send( new FormData(emailform) );
+
+    }
+
+</script>
+
+</body>
+</html>

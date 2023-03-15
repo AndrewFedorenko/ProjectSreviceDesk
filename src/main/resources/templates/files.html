@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>files</title>
+    <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{ topbar :: topbar}"></nav>
+
+<div th:text="${'FILES FOR REQUEST №'} + ${id}">
+</div>
+
+    <form id="filterform" method="post" enctype="multipart/form-data" action="/upload_file">
+        <input type="hidden" id = "requestID" th:name = "id" th:value="${id}">
+        <input type="file" id="uploadingfile" value = "FILE" th:name="file"/>
+    </form>
+
+    <button id="filterbutton" onclick="sendFile()">UPLOAD</button>
+    <button onclick='backToRequest()'>BACK TO REQUEST</button>
+
+
+    <div id="filesdiv">
+        <th:block th:replace="~{ filesttable :: filestable}">
+        </th:block>
+    </div>
+
+<script>
+    function sendFile() {
+        $('#filterform').ajaxSubmit({
+            success: function(result) {
+                location.reload()
+            },
+                error: function (error) {
+                }
+        })
+    }
+    function backToRequest(){
+        location.href="edit_request?id="+$('#requestID').val()
+    }
+    </script>
+</body>
+</html>

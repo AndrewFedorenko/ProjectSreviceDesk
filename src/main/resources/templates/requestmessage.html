@@ -1,0 +1,13 @@
+
+<table class="table" name = "requestmessage" th:fragment="requestmessage()">
+  <tr>
+    <th>DATE</th>
+    <th>USER</th>
+    <th>MESSAGE</th>
+  </tr>
+  <tr th:each="item : ${requestsMessages}">
+    <td th:text="${item.date}"> </td>
+    <td th:text="${item.user.name}"></td>
+    <td th:text="${item.messageContent}"></td>
+  </tr>
+</table>

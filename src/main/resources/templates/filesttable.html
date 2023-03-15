@@ -1,0 +1,17 @@
+<table id="filestable" th:fragment="filestable()">
+  <tr>
+    <th>NAME</th>
+    <th>UPLOAD DATE</th>
+  </tr>
+  <tr th:each="fobj : ${files}">
+    <td th:text="${fobj.name}"></td>
+    <td th:text="${fobj.uploadDateTime}"></td>
+    <td>
+      <form th:action="@{/download_file}" method="get">
+        <input type="hidden" th:name = "id" th:value="*{fobj.id}">
+        <input type="submit" value = "DOWNLOAD" />
+      </form>
+    </td>
+  </tr>
+
+</table>

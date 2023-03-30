@@ -30,7 +30,7 @@ public class Answer implements InformingReason{
     @Override
     public String createMailBody(SupportRequest supportRequest) {
         return "\nExecutor: " +
-                supportRequest.getAuthor().getName() +
+                supportRequest.getExecutor().getName() +
                 "\nanswered request: " +
                 "\n" +
                 supportRequest.getAnswer();

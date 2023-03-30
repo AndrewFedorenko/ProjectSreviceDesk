@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+// send mail to list of possible receivers
 @Service
 public class MailSender {
     @Autowired

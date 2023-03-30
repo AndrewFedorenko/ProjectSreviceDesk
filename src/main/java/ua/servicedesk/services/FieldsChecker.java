@@ -8,6 +8,7 @@ import ua.servicedesk.domain.RequiredField;
 import java.util.List;
 import java.util.Map;
 
+// check is list of fields filled by user
 @Service
 public class FieldsChecker {
 

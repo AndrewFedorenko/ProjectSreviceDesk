@@ -35,10 +35,6 @@ public class CustomHttpSecurityConfig {
                 http
                         .authorizeRequests()
                         .requestMatchers(role.getLink()).hasAnyAuthority(rolesNames);
-//                        .and().authorizeRequests().
-//                        requestMatchers(HttpMethod.POST, role.getLink()).hasAnyAuthority(rolesNames);
-                        //.and().authorizeRequests()
-                        //.requestMatchers(role.getLink()).hasAnyRole(rolesNames);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

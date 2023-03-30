@@ -8,6 +8,7 @@ import ua.servicedesk.domain.SupportRequest;
 
 import java.util.*;
 
+// function for building of aggregated report of documents (requests) count using various analytics
 @Service
 public class StatisticsBuilder {
 

@@ -3,6 +3,7 @@ package ua.servicedesk.services;
 import ua.servicedesk.domain.SupportRequest;
 import ua.servicedesk.domain.requestfields.RequestFieldType;
 
+// gets and sets fields of support request using reflection
 public class SupportRequestReflectionFieldGetter {
 
     private static String getUpperCase(String word){

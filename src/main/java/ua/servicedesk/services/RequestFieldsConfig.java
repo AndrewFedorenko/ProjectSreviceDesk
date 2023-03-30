@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// contains utility functions to process view properties and state of document request fields
 @Service
 public class  RequestFieldsConfig{
 

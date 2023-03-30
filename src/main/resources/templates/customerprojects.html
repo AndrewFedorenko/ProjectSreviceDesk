@@ -10,11 +10,11 @@
 <nav th:replace="~{ topbar :: topbar}"></nav>
 
 <form th:action="@{/add_customer}" method="post" th:object="${newcustomer}">
-    <input type="hidden" th:field="*{id}" />
+    <input class="ui-button-small" type="hidden" th:field="*{id}" />
     <label> NEW CUSTOMER
     </label>
     <input th:field="*{name}" />
-    <input type="submit" value="SAVE" />
+    <input type="submit" value="SAVE" class="ui-button-small"/>
 </form>
 
 <table id="listtable" class="table">
@@ -29,20 +29,20 @@
         </tr>
     </th:block>
     <form method="post">
-        <label>project:</label>
-        <select th:name="projectid">
+        <label>PROJECT:</label>
+        <select class="select-css" th:name="projectid">
             <option th:each="d : ${projects}" th:value="${d.id}"
                     th:text="${d.name}">
             </option>
         </select>
-        <label>customer:</label>
-        <select th:name="customerid">
+        <label>CUSTOMER:</label>
+        <select class="select-css" th:name="customerid">
             <option th:each="d : ${customers}" th:value="${d.id}"
                     th:text="${d.name}">
             </option>
         </select>
-        <input type="submit" value = "ADD" formaction = "/add_customer_project" />
-        <input type="submit" value = "DEL" formaction = "/del_customer_project" />
+        <input class="ui-button-small" type="submit" value = "ADD" formaction = "/add_customer_project" />
+        <input class="ui-button-small" type="submit" value = "DEL" formaction = "/del_customer_project" />
     </form>
 </table>
 </body>

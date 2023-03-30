@@ -1,0 +1,24 @@
+<th:block th:fragment="statisticsBody()">
+
+  <p th:text="${headtext}"
+     style="border-bottom-width: 2px;border-bottom-style: solid;width: 500px; font-weight:bold "></p>
+
+  <section th:each="item1 : ${result.list}">
+    <p th:text="(${item1.field==null} ? ${'<NOT ASSIGNED>'} : ${item1.field.name}) + ${' - '} + ${item1.count} + ${' request'}"> </p>
+    <section th:each="item2 : ${item1.list}">
+      <p th:text="(${item2.field==null} ? ${'<NOT ASSIGNED>'} : ${item2.field.name})+ ${' - '} + ${item2.count} + ${' request'}"
+         style="padding-left: 50pt"> </p>
+      <section th:each="item3 : ${item2.list}">
+        <p th:text="(${item3.field==null} ? ${'<NOT ASSIGNED>'} : ${item3.field.name})+ ${' - '} + ${item3.count} + ${' request'}"
+           style="padding-left: 100pt"> </p>
+        <section th:each="item4 : ${item3.list}">
+          <p th:text="(${item4.field==null} ? ${'<NOT ASSIGNED>'} : ${item4.field.name})+ ${' - '} + ${item4.count} + ${' request'}"
+             style="padding-left: 150pt"> </p>
+          <section th:each="item5 : ${item4.list}">
+            <p th:text="(${item5.field==null} ? ${'<NOT ASSIGNED>'} : ${item5.field.name})+ ${' - '} + ${item5.count} + ${' request'}"
+               style="padding-left: 200pt"> </p>
+      </section>
+    </section>
+  </section>
+
+</th:block>

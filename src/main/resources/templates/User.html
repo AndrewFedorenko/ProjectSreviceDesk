@@ -9,13 +9,13 @@
 
 <nav th:replace="~{ topbar :: topbar}"></nav>
 
+<th:block th:replace="~{ errordiv :: errordiv}"> </th:block>
 <div id = "errordiv"></div>
 <div>
     <h2>New user</h2>
     <div>
-        <input type="button" value = "SAVE" onclick='saveUser()' />
+        <input type="button" class="ui-button-small" value = "SAVE" onclick='saveUser()' />
 
-<!--        th:object ="${user}">-->
     <form id="userform" th:action="@{/save_user}" method="post" th:object="${user}">
         <input type="hidden" th:field="*{id}" />
         <table>
@@ -43,9 +43,6 @@
                     </option>
                 </select>
             </tr>
-<!--            <tr>-->
-<!--                <td><input type="submit" value="Save"></td>-->
-<!--            </tr>-->
         </table>
     </form>
     </div>
@@ -75,7 +72,6 @@
         XHR.send( new FormData(userform) );
 
     }
-
 </script>
 </body>
 </html>

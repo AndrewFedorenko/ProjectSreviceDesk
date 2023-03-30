@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STATISTICS</title>
+    <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{ topbar :: topbar}"></nav>
+
+<th:block th:replace="~{ requestsFilterPanel :: requestsFilterPanel}"></th:block>
+
+<th:block th:replace="~{ statisticsFieldsList :: statisticsFieldsList}">
+</th:block>
+
+<div id="statisticsbodydiv" >
+    <th:block th:replace="~{ statisticsBody :: statisticsBody}">
+    </th:block>
+</div>
+
+<script>
+    function filterrequests() {
+
+        const XHR = new XMLHttpRequest();
+
+        XHR.addEventListener( "load", function( result ) {
+            $('#statisticsbodydiv').html(result.target.response)
+
+            console.log(result)
+
+        } );
+        XHR.addEventListener( "error", function( event ) {
+            console.log( event );
+        } );
+        const fd = new FormData(filterform);
+
+        let fromList = document.getElementById('selectedList');
+        let lst = [];
+        for(var val of fromList.options){
+            lst.push(val.value)
+        }
+
+        fd.append("fieldslist", lst);
+        XHR.open( "POST", "statistics_filter" );
+        XHR.send( fd );
+
+    }
+</script>
+
+</body>
+</html>

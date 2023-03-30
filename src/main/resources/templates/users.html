@@ -23,24 +23,23 @@
 
     <form >
 
-        <label>current user:</label>
-        <select th:name="userid">
+        <label>USER:</label>
+        <select class="select-css" th:name="userid">
             <option th:each="d : ${users}" th:value="${d.id}"
                     th:text="${d.name+' '+d.email}">
             </option>
         </select>
-        <select th:name="roleid">
+        <label>ROLE:</label>
+        <select class="select-css" th:name="roleid">
             <option th:each="d : ${roles}" th:value="${d.id}"
                     th:text="${d.name}">
             </option>
         </select>
-<!--        <input type="button" value = "NEW" onclick='location.href = "/new_user"' />-->
-<!--        <input type="submit" value = "NEW" formmethod="get" formaction = "/new_user" />-->
-        <input type="submit" value = "EDIT" formmethod="get" formaction = "/edit_user" />
-        <input type="submit" value = "SET" formmethod="post" formaction = "/set_user_role" />
+        <input class="ui-button-small" type="submit" value = "EDIT" formmethod="get" formaction = "/edit_user" />
+        <input class="ui-button-small" type="submit" value = "SET" formmethod="post" formaction = "/set_user_role" />
     </form>
     <form action="/edit_user" method="get">
-        <input type="submit" value="NEW">
+        <input class="ui-button-small" type="submit" value="NEW">
         <input type="hidden" name="userid" value="0">
     </form>
 

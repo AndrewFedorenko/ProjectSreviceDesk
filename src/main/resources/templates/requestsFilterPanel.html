@@ -1,0 +1,21 @@
+<th:block th:fragment="requestsFilterPanel()">
+
+  <button id="filterbutton" class = "ui-button" onclick="filterrequests()">PROCESS</button>
+  <form class="requestsbody" id="filterform" method="post" action="/filter_requests">
+
+    <label>FROM:</label>
+    <input type="date" th:name= "datefrom"/>
+
+    <label>TO:</label>
+    <input type="date" th:name= "dateto"/>
+
+    <th:block th:each="item : ${filtermapEntrySet}">
+        <label th:text="${item.getKey()}"></label>
+        <select class = "select-css" th:name="${item.getKey()}" required="required">
+          <th:block th:replace="~{ optionfilter :: optionfilter(${item.getValue()})}"></th:block>
+        </select>
+    </th:block>
+
+  </form>
+
+</th:block>

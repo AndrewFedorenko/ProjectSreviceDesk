@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>files</title>
+    <title>FILES</title>
     <th:block th:replace="~{ commonhead :: commonhead}"></th:block>
 </head>
 <body>
@@ -12,13 +12,13 @@
 <div th:text="${'FILES FOR REQUEST №'} + ${id}">
 </div>
 
-    <form id="filterform" method="post" enctype="multipart/form-data" action="/upload_file">
+    <form id="fileform" name = "fileform" method="post" enctype="multipart/form-data" action="/upload_file">
         <input type="hidden" id = "requestID" th:name = "id" th:value="${id}">
         <input type="file" id="uploadingfile" value = "FILE" th:name="file"/>
     </form>
 
-    <button id="filterbutton" onclick="sendFile()">UPLOAD</button>
-    <button onclick='backToRequest()'>BACK TO REQUEST</button>
+    <button class = "ui-button" id="filterbutton" onclick="sendFile()">UPLOAD</button>
+    <button class = "ui-button" onclick='backToRequest()'>BACK TO REQUEST</button>
 
 
     <div id="filesdiv">
@@ -28,17 +28,29 @@
 
 <script>
     function sendFile() {
-        $('#filterform').ajaxSubmit({
-            success: function(result) {
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/upload_file",
+            data: new FormData(fileform),
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
                 location.reload()
             },
-                error: function (error) {
-                }
-        })
+            error: function (e) {
+                 console.log("ERROR : ", e);
+            }
+        });
     }
+
     function backToRequest(){
         location.href="edit_request?id="+$('#requestID').val()
     }
+
     </script>
 </body>
 </html>

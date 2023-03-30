@@ -1,0 +1,35 @@
+<th:block th:fragment="statisticsFieldsList()">
+    <p>Choose necessary analitics from list on left to list on right:</p>
+    <div style="display: flex;">
+        <select id="allFielsdList" multiple style="height: 100pt; width: 100pt;">
+            <option th:each="d : ${filtermapEntrySet}" th:value="${d.getKey()}"
+                    th:text="${d.getKey()}">
+            </option>
+        </select>
+        <div>
+            <button id="addfield" onClick="addfield()">>></button>
+            <button id="delfield" onClick="removefield()"><<</button>
+        </div>
+        <select id="selectedList" multiple style="height: 100pt; width: 100pt;">
+        </select>
+    </div>
+    <script>
+        function addfield() {
+            processFields('allFielsdList',
+                'selectedList')
+        }
+
+        function removefield() {
+            processFields('selectedList',
+                'allFielsdList')
+        }
+
+        function processFields(fromList, toList) {
+            let val = $('#' + fromList + ' option:selected').val();
+            if(val != null){
+            $('#'+toList).append('<option value="' + val + '" >' + val + '</option>')
+
+            $('#' + fromList + ' option:selected').remove();}
+        }
+    </script>
+</th:block>

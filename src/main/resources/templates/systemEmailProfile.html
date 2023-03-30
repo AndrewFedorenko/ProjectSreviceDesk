@@ -9,11 +9,11 @@
 
 <nav th:replace="~{ topbar :: topbar}"></nav>
 
-<div id = "errordiv"></div>
+<th:block th:replace="~{ errordiv :: errordiv}"> </th:block>
 <div>
     <h2>SYSTEM EMAIL SETTINGS</h2>
     <div>
-        <input type="button" value = "SAVE" onclick='saveEmail()' />
+        <input class="ui-button-small" type="button" value = "SAVE" onclick='saveEmail()' />
 
         <form id="emailform" th:action="@{/save_email}" method="post" th:object="${email}">
             <input type="hidden" th:field="*{id}" />

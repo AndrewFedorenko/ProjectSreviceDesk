@@ -5,7 +5,9 @@
     <title>SERVICEDESK</title>
 </head>
 <body>
+
 <div th:fragment="topbar()">
+
     <div class="aroundbar">
         <div class="navigation" style="margin-right: 100px;">
             <form name="logout" action="/logout" method="post">
@@ -15,11 +17,11 @@
         </div>
         <div class="navigation">
             <form id="navpanel" method="get">
-                <input class = "ui-button" type="submit" name="requests" value="REQUESTS" formaction="/requests">
-                <input class = "ui-button" type="submit" name="users" value="USERS" formaction="/users">
-                <input class = "ui-button" type="submit" name="projects" value="PROJECTS" formaction="/user_projects">
-                <input class = "ui-button" type="submit" name="customers" value="CUSTOMERS" formaction="/customer_projects">
-                <input class = "ui-button" type="submit" name="email" value="EMAIL" formaction="/email_profile">
+                <th:block th:each="item : ${allowedLinks}">
+                <input class = "ui-button-nav" type="submit"
+                       th:name="${item.getMenuName()}" th:value="${item.getMenuName()}"
+                       th:formaction="@{/{linkTitle}(linkTitle=${item.getSubLink()})}">
+                </th:block>
             </form>
         </div>
     </div>
@@ -37,22 +39,6 @@
         }
     </style>
 
-    <script>
-        $(document).ready(function (){
-            const XHR = new XMLHttpRequest();
-
-            XHR.addEventListener( "load", function( result ) {
-                if (result.target.response!==""){
-                $('#navpanel').remove()
-                }
-            } );
-            XHR.addEventListener( "error", function( error ) {
-            } );
-
-            XHR.open( "GET", "is_enable_navigation" );
-            XHR.send( new FormData() );
-        })
-    </script>
 </div>
 </body>
 </html>

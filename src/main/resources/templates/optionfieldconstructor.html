@@ -1,11 +1,15 @@
+
 <th:block th:fragment="optionfieldconstructor(labelname, paramname, paramslist, entity)">
   <label th:value="${labelname}" th:text="${labelname}"></label>
-  <select class = "select-css" th:name="${paramname}" th:id="${paramname}" th:value="${entity != null} ? ${entity.id} : ${'0'}">
+  <select class = "select-css"
+          th:name="${paramname}"
+          th:id="${paramname}"
+          th:value="${entity != null} ? ${entity.id} : ${'0'}"
+          th:attr="disabled=${readonly}"
+          th:readOnly="${fieldslist.contains(labelname)}">
     <option th:each="d : ${paramslist}" th:value="${d != null} ? ${d.id} : ${'0'}"
             th:text="${d != null} ? ${d.name} : ${''}"
                th:selected="${entity != null && d != null && entity.id == d.id || entity==d}">
-    <!--            th:selected="${entity == null} && ${d.id=='0'} || ${entity != null} && ${entity.id==d.id}"-->
-<!--    >-->
     </option>
   </select>
 </th:block>

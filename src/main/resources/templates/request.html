@@ -9,8 +9,10 @@
 
 <nav th:replace="~{ topbar :: topbar}"></nav>
 
-<div>
-  <h2>REQUEST EDIT</h2>
+<div id="requestdiv">
+  <h2 >REQUEST EDIT</h2>
+    <div th:text="${readonly}==true ? ${'read-only mode'} : ${''}" style="color: red;"></div>
+
 
     <div style="border-bottom-width: 2px;
             border-bottom-style: solid;
@@ -19,58 +21,61 @@
             padding-bottom: 5px;
             margin-bottom: 15px">
 
-        <button id="taketoworkbutton" onclick="taketowork()">  TAKE TO WORK </button>
-        <input type="button" value = "SAVE" onclick='saveDocumentRequest()' />
-        <input type="button" value = "FILES" onclick='openfiles()' />
-        <input type="button" value = "BACK TO REQUESTS" onclick='location.href="requests"' />
+        <button class = "ui-button" id="taketoworkbutton" onclick="taketowork()"
+                th:if="${taketoworkbutton==true}"
+                th:attr="disabled=${readonly}">  TAKE TO WORK </button>
+        <input type="button" class = "ui-button" value = "SAVE"
+               onclick='saveDocumentRequest()'
+               th:if="${savebutton==true}"
+               th:attr="disabled=${readonly}" />
+        <input type="button" class = "ui-button" value = "FILES" onclick='openfiles()' />
+        <input type="button" class = "ui-button" value = "BACK TO REQUESTS"
+               onclick='location.href="requests"' />
     </div>
 
-    <div class="documentgroup" id = "errordiv" style="background-color: darkgoldenrod"></div>
-    <select id = "fieldslist" th:name="fieldslist">
-        <option th:each="d : ${fieldslist}" th:value="${d.field}"
-                th:text="${d.field}">
-        </option>
-    </select>
+    <th:block th:replace="~{ errordiv :: errordiv}"> </th:block>
+
     <div class="documentgroup">
         <form id = "requestform" th:object="${requestobject}" action="/save_request" method="post">
-    <!--        >-->
+
             <div class="documentgroup" id="datenumber">
                 <label>date:</label>
-                <input id = "date" type="text" th:field="*{date}" placeholder="date" />
+                <input id = "date" type="text" th:field="*{date}" placeholder="date"
+                       th:attr="disabled=${readonly}"
+                       th:readOnly="${fieldslist.contains('date')}" />
                 <label>number:</label>
-                <input id = "id" type="number" th:field="*{id}" placeholder="number" />
+                <input id = "id" type="number" th:field="*{id}" placeholder="number"
+                       th:attr="disabled=${readonly}"
+                       th:readOnly="${fieldslist.contains('id')}"/>
+                <input id = "version" type="hidden" th:field="*{version}" />
             </div>
+
             <div class="documentgroup">
-                <th:block th:replace=
-                "~{ optionfieldconstructor :: optionfieldconstructor(${'customer:'},${'customerid'},${customerlist}, ${requestobject.customer})}">
-                </th:block>
 
+                <th:block th:each="item : ${filtermapEntrySet}">
                 <th:block th:replace=
-                "~{ optionfieldconstructor :: optionfieldconstructor(${'author:'},${'authorid'},${authorlist}, ${requestobject.author})}">
+   "~{ optionfieldconstructor :: optionfieldconstructor(${item.getKey()},${item.getKey() + 'id'},${item.getValue()}, ${valuesMap.get(item.getKey())})}">
                 </th:block>
-
-                <th:block th:replace=
-                "~{ optionfieldconstructor :: optionfieldconstructor(${'user:'},${'userid'},${userlist}, ${requestobject.user})}">
-                </th:block>
-
-                <th:block th:replace=
-                "~{ optionfieldconstructor :: optionfieldconstructor(${'status:'},${'statusid'},${statuslist}, ${requestobject.status})}">
-                </th:block>
-
-                <th:block th:replace=
-                "~{ optionfieldconstructor :: optionfieldconstructor(${'project:'},${'projectid'},${projectlist}, ${requestobject.project})}">
                 </th:block>
 
             </div>
 
             <div id="contentdiv">
                 <label class="textlabel">content:</label>
-                <input id = "content" type="hidden" th:field="*{content}" placeholder="content" />
-                <textarea id = "contenttext"></textarea>
+                <input id = "content" type="hidden" th:field="*{content}" placeholder="content"
+                       th:attr="disabled=${readonly}"
+                       th:readOnly="${fieldslist.contains('content')}"/>
+                <textarea id = "contenttext"
+                          th:text="*{content}"
+                          th:attr="disabled=${readonly || fieldslist.contains('content')}"></textarea>
 
                 <label class="textlabel">answer:</label>
-                <input id="answer" type="hidden" th:field="*{answer}" placeholder="answer" />
-                <textarea id = "answertext"></textarea>
+                <input id="answer" type="hidden" th:field="*{answer}" placeholder="answer"
+                       th:attr="disabled=${readonly}"
+                       th:readOnly="${fieldslist.contains('answer')}"/>
+                <textarea id = "answertext"
+                          th:text="*{answer}"
+                          th:attr="disabled=${readonly || fieldslist.contains('answer')}"></textarea>
             </div>
     
         </form>
@@ -81,9 +86,8 @@
                                                             border-top-width: 2px;
                                                             padding-top: 3px;">
         <label class="textlabel">new message:</label>
-<!--        <input id = "newmessage" type="text" placeholder="newmessage" />-->
-        <textarea id = "newmessage" style=" width: inherit;"></textarea>
-        <button id="filterbutton" onclick="sendmessage()">POST</button>
+        <textarea id = "newmessage" style=" width: inherit;" th:attr="disabled=${readonly}"></textarea>
+        <button class="ui-button-small" id="filterbutton" onclick="sendmessage()" th:attr="disabled=${readonly}">POST</button>
     </div>
 
     <div id="messagesdiv" >
@@ -92,7 +96,7 @@
     </div>
     <style>
         .documentgroup{
-            width: 70%;
+            width: 80%;
             display: inline-block;
             margin-bottom: 15px;
         }
@@ -136,29 +140,6 @@
             }
         }
 
-        $(document).ready(function (){
-            $('#contenttext').val($('#content').val())
-            $('#answertext').val($('#answer').val())
-
-            var os=document.getElementById("fieldslist");
-            var i;
-            $('#requestform').find('input').each(function (th) {
-                console.log(this.id);
-                for (i=0; i<os.length; i++) {
-                    if(this.id==os[i].innerText){
-                        this.readOnly = true;
-                        break;
-                    }
-                }
-            })
-
-            $('#fieldslist').remove()
-
-            document.getElementById('answertext').readOnly = document.getElementById('answer').readOnly
-            document.getElementById('contenttext').readOnly = document.getElementById('content').readOnly
-
-        })
-
         function saveDocumentRequest(){
             $('#content').val($('#contenttext').val())
             $('#answer').val($('#answertext').val())
@@ -169,10 +150,15 @@
                         var res = JSON.parse(result.target.response)
 
                         if (res.errorlist !== ''){
-                            $('#errordiv').text("Before saving you have to fill " + res.errorlist);
+                            $('#errordiv').text(res.errorlist);
                         } else {$('#errordiv').text("")}
+
                         if (res.id !== ''){
                             $('#id').val(res.id)
+                        }
+
+                        if (res.version !== ''){
+                            $('#version').val(res.version)
                         }
 
                     } );
@@ -207,12 +193,12 @@
 
                     var res = JSON.parse(result.target.response)
                     if (res.id !== ''){
-                        $('#userid').val(res.id)
+                        $('#executorid').val(res.id)
 
 
-                        if(document.getElementById('userid').length<=1){
+                        if(document.getElementById('executorid').length<=1){
                             let newOption = new Option(res.name, res.id);
-                            $('#userid').append(newOption);
+                            $('#executorid').append(newOption);
 
                             newOption.selected = true;}
                     }

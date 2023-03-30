@@ -12,44 +12,10 @@
 
 <div id="requests" th:fragment="requests()">
 
-<!--    <div class="requestsbody">-->
-<!--        requests filter-->
-<!--    </div>-->
-    <button id="filterbutton" onclick="felterrequests()"> APPLY FILTER </button>
-    <form class="requestsbody" id="filterform" method="post" action="/filter_requests">
+    <th:block th:replace="~{ requestsFilterPanel :: requestsFilterPanel}"></th:block>
 
-        <input type="date" th:name= "datefrom" value="DATE FROM"/>
-        <input type="date" th:name= "dateto" value="DATE TO"/>
-
-        <label>CUSTOMER:</label>
-        <select class = "select-css" th:name="customer" required="required">
-            <th:block th:replace="~{ optionfilter :: optionfilter(${customerlist})}"></th:block>
-        </select>
-
-        <label>AUTHOR:</label>
-        <select class = "select-css" th:name="author" required="required">
-            <th:block th:replace="~{ optionfilter :: optionfilter(${authorlist})}"></th:block>
-        </select>
-
-        <label>USER:</label>
-        <select class = "select-css" th:name="user" required="required">
-            <th:block th:replace="~{ optionfilter :: optionfilter(${userlist})}"></th:block>
-        </select>
-
-        <label>PROJECT:</label>
-        <select class = "select-css" th:name="project" required="required">
-            <th:block th:replace="~{ optionfilter :: optionfilter(${projectlist})}"></th:block>
-        </select>
-
-        <label>STATUS:</label>
-        <select class = "select-css" th:name="status" required="required">
-            <th:block th:replace="~{ optionfilter :: optionfilter(${statuslist})}"></th:block>
-        </select>
-
-    </form>
-
-    <form id = "newrequestform" action="/edit_request" method="get">
-        <input type="submit" value="New request" style="margin: 10px">
+    <form id = "newrequestform" action="/edit_request" method="get" th:if="${newrequestbutton}==true">
+        <input type="submit" class = "ui-button" value="New request" style="margin: 10px">
         <input type="hidden" name="id" value="0">
     </form>
 
@@ -62,29 +28,17 @@
 
         $(document).ready(function (){
 
-            const XHR = new XMLHttpRequest();
-
-            XHR.addEventListener( "load", function( result ) {
-                if(result.target.response!==""){
-                    $('#newrequestform').remove()
-                }
-            } );
-            XHR.addEventListener( "error", function( error ) {
-                console.log( error );
-            } );
-
-            XHR.open( "GET", "take_to_work" );
-            XHR.send( new FormData() );
+            $('#requeststable').DataTable();
 
         })
 
-        function felterrequests() {
+        function filterrequests() {
 
             const XHR = new XMLHttpRequest();
 
             XHR.addEventListener( "load", function( result ) {
                 $('#requestsdiv').html(result.target.response)
-
+                $('#requeststable').DataTable();
                  console.log(result)
 
             } );
